@@ -1,0 +1,7 @@
+services:
+  bid-app:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_PASSWORD=melik
+    ports:
+      - "5432:5432"
