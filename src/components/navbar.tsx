@@ -6,18 +6,8 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs"
-import prisma from "@/libs/client"
-import { auth } from "@clerk/nextjs/server"
 
 const Navbar = () => {
-  // const { userId: currentUserId } = auth()
-
-  // if (!currentUserId) return null
-
-  // const user = await prisma.user.findFirst({
-  //   where: { id: currentUserId },
-  // })
-
   return (
     <div className="flex bg-slate-700 text-white justify-evenly items-center h-16 bg-surface-0 ">
       <div className="logo">
@@ -42,7 +32,10 @@ const Navbar = () => {
           </SignedOut>
           <SignedIn>
             <Link className="bg-black rounded-md p-2" href="/create-bid">
-              Create a Bid
+              Create an auction
+            </Link>
+            <Link className="bg-black rounded-md p-2" href={`/my-auctions`}>
+              My Auctions
             </Link>
             <UserButton />
           </SignedIn>

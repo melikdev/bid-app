@@ -1,5 +1,6 @@
 import prisma from "@/libs/client"
 import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
 
 const CreateBid = async () => {
   const { userId } = auth()
@@ -13,19 +14,16 @@ const CreateBid = async () => {
     const description = formData.get("description") as string
     const price = formData.get("price") as string
 
-    try {
-      const res = await prisma.bid.create({
-        data: {
-          title,
-          description,
-          price: parseInt(price),
-          userId: userId,
-        },
-      })
-      console.log(res)
-    } catch (err) {
-      console.log(err)
-    }
+    await prisma.bid.create({
+      data: {
+        title,
+        description,
+        price: parseInt(price),
+        userId: userId,
+      },
+    })
+
+    redirect("/")
   }
 
   return (

@@ -9,11 +9,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body>
-          <div>
-            <Navbar />
-          </div>
-          <div>{children}</div>
+        <body className="bg-slate-500 h-screen">
+          <Navbar />
+          {children}
         </body>
       </html>
     </ClerkProvider>
