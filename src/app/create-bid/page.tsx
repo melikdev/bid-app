@@ -1,34 +1,23 @@
-import prisma from "@/libs/client"
-import { auth } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
+"use client"
 
-const CreateBid = async () => {
-  const { userId } = auth()
+import bidSubmit from "@/actions/createBidAction"
+import { UploadButton } from "@/utils/uploadthing"
+import { useState } from "react"
 
-  const bidSubmit = async (formData: FormData) => {
-    "use server"
-
-    if (!userId) return
-
-    const title = formData.get("title") as string
-    const description = formData.get("description") as string
-    const price = formData.get("price") as string
-
-    await prisma.bid.create({
-      data: {
-        title,
-        description,
-        price: parseInt(price),
-        userId: userId,
-      },
-    })
-
-    redirect("/")
-  }
+const CreateBid = () => {
+  const [img, setImg] = useState("")
 
   return (
     <div className="bg-slate-500 h-[calc(100vh-4rem)] flex flex-col justify-center items-center">
-      <form action={bidSubmit} className="space-y-6">
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault()
+          const form = e.target as HTMLFormElement
+          const formData = new FormData(form)
+          await bidSubmit(formData)
+        }}
+        className="space-y-6"
+      >
         <div>
           <label className="block text-sm font-medium text-gray-300">
             Bid Title
@@ -61,7 +50,26 @@ const CreateBid = async () => {
             placeholder="bid price"
           />
         </div>
-
+        <div className="">
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              const imgUrl = res[0].url
+              setImg(imgUrl)
+              alert("Upload Completed")
+            }}
+            onUploadError={(error: Error) => {
+              alert(`ERROR! ${error.message}`)
+            }}
+          />
+          <input
+            style={{ display: "none" }}
+            type="text"
+            name="img"
+            value={img}
+            onChange={() => {}}
+          />
+        </div>
         <button
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

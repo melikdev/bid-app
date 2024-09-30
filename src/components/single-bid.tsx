@@ -1,5 +1,6 @@
 import prisma from "@/libs/client"
 import { Bid } from "@prisma/client"
+import Image from "next/image"
 import Link from "next/link"
 
 const SingleBid = async ({ bid }: { bid: Bid }) => {
@@ -9,9 +10,16 @@ const SingleBid = async ({ bid }: { bid: Bid }) => {
 
   return (
     <div className="bg-white flex flex-col items-center gap-3 w-52  rounded-md p-5 shadow-md">
-      <h1 className="text-2xl font-bold text-black">{bid.title}</h1>
+      <Image
+        className="object-cover border-2 rounded-md h-32"
+        src={bid?.imgUrl}
+        alt="image"
+        width={200}
+        height={200}
+      />
+      <h1 className="text-2xl font-bold text-black">{bid?.title}</h1>
       <p className="font-bold">
-        Starting price: <span className="text-blue-600">${bid.price}</span>
+        Starting price: <span className="text-blue-600">${bid?.price}</span>
       </p>
       <p>By: {user?.username}</p>
       <Link
