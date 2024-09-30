@@ -1,4 +1,5 @@
 import prisma from "@/libs/client"
+import formatDate from "@/utils/format-date"
 import { auth } from "@clerk/nextjs/server"
 import { Bid } from "@prisma/client"
 import Image from "next/image"
@@ -8,6 +9,8 @@ const SingleBid = async ({ bid }: { bid: Bid }) => {
   const user = await prisma.user.findFirst({
     where: { id: bid.userId },
   })
+
+  const { formattedDate, diffInMinutes } = formatDate(new Date(bid?.createdAt))
 
   return (
     <div className="bg-white flex flex-col items-center gap-3 w-52  rounded-md p-5 shadow-md">
@@ -23,6 +26,10 @@ const SingleBid = async ({ bid }: { bid: Bid }) => {
         Starting price: <span className="text-blue-600">${bid?.price}</span>
       </p>
       <p>By: {user?.username}</p>
+      <p className="text-gray-500">
+        {diffInMinutes === 0 && "Just now"}
+        {diffInMinutes > 0 && `${diffInMinutes} minute(s) ago`}
+      </p>
       <Link
         className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
         href={`/bid/${bid.id}`}

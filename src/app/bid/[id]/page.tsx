@@ -2,7 +2,7 @@ import deleteBidAction from "@/actions/deleteBidAction"
 import prisma from "@/libs/client"
 import { auth } from "@clerk/nextjs/server"
 import Image from "next/image"
-import Link from "next/link"
+import formatDate from "@/utils/format-date"
 
 const Bid = async ({ params }: { params: { id: string } }) => {
   const { userId } = auth()
@@ -16,31 +16,15 @@ const Bid = async ({ params }: { params: { id: string } }) => {
 
   if (!data) return null
 
-  const createdAtDate = new Date(data?.createdAt)
-
-  // Format the date in the desired format
-  const formattedDate = createdAtDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  })
-
-  // Calculate the difference between the current time and the createdAtDate
-  const diff = Date.now() - createdAtDate.getTime()
-  const diffInMinutes = Math.floor(diff / (1000 * 60))
+  const { formattedDate, diffInMinutes } = formatDate(new Date(data?.createdAt))
 
   return (
-    <div className="flex flex-wrap gap-10 mt-20 justify-center">
+    <div className="flex flex-wrap gap-52 mt-20 justify-center">
       <div className="left flex flex-col gap-10 items-center">
-        <h1 className="text-4xl font-bold text-white mt-20 text-center">
+        <h1 className="text-4xl font-bold text-white mt-20 text-center uppercase">
           {data?.title}
         </h1>
-        <p className="text-center ">
-          {diffInMinutes === 0 && "Just now"}
-          {diffInMinutes > 0 && `${diffInMinutes} minutes ago`}
-        </p>
+
         <Image
           className="object-fill border-2 rounded-md max-h-52 max-w-52"
           src={data?.imgUrl}
@@ -48,6 +32,10 @@ const Bid = async ({ params }: { params: { id: string } }) => {
           width={300}
           height={300}
         />
+        <p className="text-center bg-yellow-200 text-yellow-600 font-bold py-2 px-4 rounded-md">
+          {diffInMinutes === 0 && "Just now"}
+          {diffInMinutes > 0 && `${diffInMinutes} minutes ago`}
+        </p>
         <form action={deleteBidAction}>
           {userId === data?.userId && (
             <div>
@@ -65,10 +53,17 @@ const Bid = async ({ params }: { params: { id: string } }) => {
           )}
         </form>
       </div>
-      <div className="right">
+      <div className="right flex flex-col gap-10 items-center">
         <h1 className="text-4xl font-bold text-white mt-20 text-center">
           CURRENT BIDS
         </h1>
+        {/* <div className="max-h-96 overflow-y-scroll flex flex-col gap-2 p-20"> */}
+        <div className="bg-white flex flex-col items-center justify-center gap-3 max-w-52 rounded-md p-5 shadow-md">
+          <div>
+            <span>John Doe</span> bidded <span>200$</span>
+          </div>
+          <div className="text-gray-400">just now</div>
+        </div>
       </div>
     </div>
   )

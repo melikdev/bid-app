@@ -6,6 +6,7 @@ import { useState } from "react"
 
 const CreateBid = () => {
   const [img, setImg] = useState("")
+  const [visible, setVisible] = useState(true)
 
   return (
     <div className="bg-slate-500 h-[calc(100vh-4rem)] flex flex-col justify-center items-center">
@@ -53,18 +54,24 @@ const CreateBid = () => {
             required
           />
         </div>
-        <div className="">
-          <UploadButton
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              const imgUrl = res[0].url
-              setImg(imgUrl)
-              alert("Upload Completed")
-            }}
-            onUploadError={(error: Error) => {
-              alert(`ERROR! ${error.message}`)
-            }}
-          />
+        <div className="flex justify-center items-center">
+          {visible ? (
+            <UploadButton
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                const imgUrl = res[0].url
+                setImg(imgUrl)
+                setVisible(false)
+              }}
+              onUploadError={(error: Error) => {
+                alert(`ERROR! ${error.message}`)
+              }}
+            />
+          ) : (
+            <div className="bg-green-600  text-white font-bold py-2 px-4 rounded-md">
+              Image added!
+            </div>
+          )}
           <input
             style={{ display: "none" }}
             type="text"
