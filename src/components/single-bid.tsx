@@ -1,4 +1,5 @@
 import prisma from "@/libs/client"
+import { auth } from "@clerk/nextjs/server"
 import { Bid } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"

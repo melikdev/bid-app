@@ -27,6 +27,7 @@ const CreateBid = () => {
             name="title"
             className="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter bid title"
+            required
           />
         </div>
         <div>
@@ -37,6 +38,7 @@ const CreateBid = () => {
             name="description"
             className="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter bid description"
+            required
           />
         </div>
         <div>
@@ -48,6 +50,7 @@ const CreateBid = () => {
             name="price"
             className="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="bid price"
+            required
           />
         </div>
         <div className="">
@@ -68,6 +71,7 @@ const CreateBid = () => {
             name="img"
             value={img}
             onChange={() => {}}
+            required
           />
         </div>
         <button

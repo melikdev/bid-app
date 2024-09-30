@@ -1,7 +1,13 @@
+import deleteBidAction from "@/actions/deleteBidAction"
 import prisma from "@/libs/client"
+import { auth } from "@clerk/nextjs/server"
 import Image from "next/image"
+import Link from "next/link"
 
 const Bid = async ({ params }: { params: { id: string } }) => {
+  const { userId } = auth()
+
+  if (!userId) return null
   const paramId = parseInt(params.id)
 
   const data = await prisma.bid.findFirst({
@@ -27,7 +33,7 @@ const Bid = async ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="flex flex-wrap gap-10 mt-20 justify-center">
-      <div className="left flex flex-col gap-10">
+      <div className="left flex flex-col gap-10 items-center">
         <h1 className="text-4xl font-bold text-white mt-20 text-center">
           {data?.title}
         </h1>
@@ -42,8 +48,21 @@ const Bid = async ({ params }: { params: { id: string } }) => {
           width={300}
           height={300}
         />
-        <form>
-          <input type="hidden" name="id" value={paramId} />
+        <form action={deleteBidAction}>
+          {userId === data?.userId && (
+            <div>
+              <button className="bg-red-700 p-2 rounded-md text-white">
+                Delete this auction
+              </button>
+              <input
+                className="hidden"
+                type="text"
+                name="id"
+                value={paramId}
+                readOnly
+              />
+            </div>
+          )}
         </form>
       </div>
       <div className="right">
