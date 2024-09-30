@@ -70,7 +70,7 @@ const CreateBid = () => {
             type="text"
             name="img"
             value={img}
-            onChange={() => {}}
+            readOnly
             required
           />
         </div>
