@@ -6,12 +6,10 @@ import formatDate from "@/utils/format-date"
 // Actions
 import deleteBidAction from "@/actions/deleteBidAction"
 import bidAuctionAction from "@/actions/bidAuctionAction"
-import { clearScreenDown } from "readline"
 
 const Bid = async ({ params }: { params: { id: string } }) => {
   const { userId } = auth()
 
-  if (!userId) return null
   const paramId = parseInt(params.id)
 
   const data = await prisma.bid.findFirst({
@@ -26,16 +24,12 @@ const Bid = async ({ params }: { params: { id: string } }) => {
     },
   })
 
-  if (!data || !bidHistory) return null
+  if (!data || !bidHistory || !userId) return null
 
-  // find bidInterval of all bids
+  // find bidInterval of all bids and add them to current auction price
   const bidInterval = bidHistory.map((bid) => bid.bidInterval)
-
-  // add every bidInterval to get sum
   const sum = bidInterval.reduce((acc, curr) => acc + curr, 0)
-
-  // add sum to bid price
-  const price = data?.price + sum
+  const currentAuctionPrice = data?.price + sum
 
   const { diffInMinutes, diffInHours } = formatDate(new Date(data?.createdAt))
 
@@ -53,11 +47,13 @@ const Bid = async ({ params }: { params: { id: string } }) => {
           height={300}
         />
         <div className="flex flex-col justify-between gap-2 items-center bg-blue-500 p-2 rounded-md text-white">
-          <span>Starting price:</span>
-          <span className="font-bold">${data?.price}</span>
+          <div className="flex justify-between gap-2 ">
+            <span>Starting price:</span>
+            <span className="font-bold">${data?.price}</span>
+          </div>
           <div className="flex justify-between gap-2 animate-pulse">
             <span>Current auction price:</span>
-            <span className="font-bold">${price}</span>
+            <span className="font-bold">${currentAuctionPrice}</span>
           </div>
         </div>
         <p className="text-center bg-yellow-200 text-yellow-600 font-bold py-2 px-4 rounded-md">
