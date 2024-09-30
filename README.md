@@ -1,4 +1,4 @@
-Bid App with Next.js, Prisma, Clerk, UploadThing
+Bid App with Next.js, Prisma, Clerk, UploadThing and TailwindCSS
 
 ## Getting Started
 
